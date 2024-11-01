@@ -1,0 +1,7 @@
+
+CTP_PROJECT_KEY=new-learning-sample-project
+CTP_CLIENT_SECRET=I5BPc94qn02BvyWTMg6f835HzM_t5-Sa
+CTP_CLIENT_ID=U3-9HMo1I1EtFPK3iUExszgI
+CTP_AUTH_URL=https://auth.europe-west1.gcp.commercetools.com
+CTP_API_URL=https://api.europe-west1.gcp.commercetools.com
+CTP_SCOPES=manage_project:new-learning-sample-project
