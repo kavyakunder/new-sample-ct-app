@@ -1,27 +1,24 @@
-import { isApolloError } from '@apollo/client';
 import omitEmpty from 'omit-empty-es';
 
 const DUPLICATE_FIELD_ERROR_CODE = 'DuplicateField';
 
-/**
- * TransformedErrors: { unmappedErrors: [], formErrors: {} }
- *
- * @param  Object error
- * @return Object TransformedErrors
- */
+type TransformedErrors = {
+  unmappedErrors: unknown[];
+  formErrors: Record<string, { duplicate: boolean }>;
+};
 
-export const transformErrors = (error) => {
+export const transformErrors = (error: unknown): TransformedErrors => {
   const errorsToMap = Array.isArray(error) ? error : [error];
 
-  const { formErrors, unmappedErrors } = errorsToMap.reduce(
-    (transformedErrors, graphQlError) => {
-      const errorCode = graphQlError?.extensions?.code ?? graphQlError.code;
-      const fieldName = graphQlError?.extensions?.field ?? graphQlError.field;
+  const { formErrors, unmappedErrors } = errorsToMap.reduce<TransformedErrors>(
+    (transformedErrors, graphQLError) => {
+      const errorCode = graphQLError?.extensions?.code ?? graphQLError.code;
+      const fieldName = graphQLError?.extensions?.field ?? graphQLError.field;
 
       if (errorCode === DUPLICATE_FIELD_ERROR_CODE) {
         transformedErrors.formErrors[fieldName] = { duplicate: true };
       } else {
-        transformedErrors.unmappedErrors.push(graphQlError);
+        transformedErrors.unmappedErrors.push(graphQLError);
       }
       return transformedErrors;
     },

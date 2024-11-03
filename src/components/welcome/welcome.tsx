@@ -1,4 +1,4 @@
-import PropTypes from 'prop-types';
+import type { ReactNode } from 'react';
 import { useRouteMatch, Link as RouterLink } from 'react-router-dom';
 import { useIntl } from 'react-intl';
 import Constraints from '@commercetools-uikit/constraints';
@@ -10,16 +10,24 @@ import messages from './messages';
 import styles from './welcome.module.css';
 import WebDeveloperSvg from './web-developer.svg';
 
-const WrapWith = (props) =>
-  props.condition ? props.wrapper(props.children) : props.children;
+type TWrapWithProps = {
+  children: ReactNode;
+  condition: boolean;
+  wrapper: (children: ReactNode) => ReactNode;
+};
+const WrapWith = (props: TWrapWithProps) => (
+  <>{props.condition ? props.wrapper(props.children) : props.children}</>
+);
 WrapWith.displayName = 'WrapWith';
-WrapWith.propTypes = {
-  condition: PropTypes.bool.isRequired,
-  wrapper: PropTypes.func.isRequired,
-  children: PropTypes.node.isRequired,
+
+type TInfoCardProps = {
+  title: string;
+  content: string;
+  linkTo: string;
+  isExternal?: boolean;
 };
 
-const InfoCard = (props) => (
+const InfoCard = (props: TInfoCardProps) => (
   <Grid.Item>
     <div className={styles.infoCard}>
       <Spacings.Stack scale="m">
@@ -55,12 +63,6 @@ const InfoCard = (props) => (
   </Grid.Item>
 );
 InfoCard.displayName = 'InfoCard';
-InfoCard.propTypes = {
-  title: PropTypes.string.isRequired,
-  content: PropTypes.string.isRequired,
-  linkTo: PropTypes.string.isRequired,
-  isExternal: PropTypes.bool,
-};
 
 const Welcome = () => {
   const match = useRouteMatch();

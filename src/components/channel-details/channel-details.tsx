@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import { useParams } from 'react-router-dom';
 import {
@@ -17,6 +16,7 @@ import { useIsAuthorized } from '@commercetools-frontend/permissions';
 import {
   useShowNotification,
   useShowApiErrorNotification,
+  type TApiErrorNotificationOptions,
 } from '@commercetools-frontend/actions-global';
 import { PERMISSIONS } from '../../constants';
 import {
@@ -29,9 +29,13 @@ import { transformErrors } from './transform-errors';
 import messages from './messages';
 import { ApplicationPageTitle } from '@commercetools-frontend/application-shell';
 
-const ChannelDetails = (props) => {
+type TChannelDetailsProps = {
+  onClose: () => void;
+};
+
+const ChannelDetails = (props: TChannelDetailsProps) => {
   const intl = useIntl();
-  const params = useParams();
+  const params = useParams<{ id: string }>();
   const { loading, error, channel } = useChannelDetailsFetcher(params.id);
   const { dataLocale, projectLanguages } = useApplicationContext((context) => ({
     dataLocale: context.dataLocale ?? '',
@@ -48,7 +52,7 @@ const ChannelDetails = (props) => {
       const data = formValuesToDoc(formikValues);
       try {
         await channelDetailsUpdater.execute({
-          originalDraft: channel,
+          originalDraft: channel!,
           nextDraft: data,
         });
         showNotification({
@@ -66,7 +70,8 @@ const ChannelDetails = (props) => {
         const transformedErrors = transformErrors(error);
         if (transformedErrors.unmappedErrors.length > 0) {
           showApiErrorNotification({
-            errors: transformedErrors.unmappedErrors,
+            errors:
+              transformedErrors.unmappedErrors as TApiErrorNotificationOptions['errors'],
           });
         }
 
@@ -83,7 +88,6 @@ const ChannelDetails = (props) => {
       showNotification,
     ]
   );
-
   return (
     <ChannelsDetailsForm
       initialValues={docToFormValues(channel, projectLanguages)}
@@ -113,7 +117,7 @@ const ChannelDetails = (props) => {
             }
             isSecondaryButtonDisabled={!formProps.isDirty}
             onSecondaryButtonClick={formProps.handleReset}
-            onPrimaryButtonClick={formProps.submitForm}
+            onPrimaryButtonClick={() => formProps.submitForm()}
             labelPrimaryButton={FormModalPage.Intl.save}
             labelSecondaryButton={FormModalPage.Intl.revert}
           >
@@ -141,8 +145,5 @@ const ChannelDetails = (props) => {
   );
 };
 ChannelDetails.displayName = 'ChannelDetails';
-ChannelDetails.propTypes = {
-  onClose: PropTypes.func.isRequired,
-};
 
 export default ChannelDetails;

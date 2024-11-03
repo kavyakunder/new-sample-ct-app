@@ -1,7 +1,7 @@
 {
-  "name": "@commercetools-applications/merchant-center-template-starter",
+  "name": "@commercetools-applications/merchant-center-template-starter-typescript",
   "version": "22.35.0",
-  "description": "A starter example for the bare minimum setup to develop a Merchant Center Application",
+  "description": "A starter example in TypeScript for the bare minimum setup to develop a Merchant Center Application",
   "private": true,
   "scripts": {
     "build": "mc-scripts build",
@@ -9,11 +9,12 @@
     "compile-html": "mc-scripts compile-html",
     "compile-html:local": "MC_APP_ENV=development mc-scripts compile-html --transformer @commercetools-frontend/mc-dev-authentication/transformer-local.js",
     "start:prod:local": "npm run compile-html:local && mc-scripts serve",
-    "extract-intl": "formatjs extract --format=./intl-formatter.js --out-file=./src/i18n/data/core.json 'src/**/!(*.spec).js'",
+    "extract-intl": "formatjs extract --format=./intl-formatter.js --out-file=./src/i18n/data/core.json 'src/**/!(*.spec).(ts|tsx)'",
     "test": "jest --config jest.test.config.js",
     "test:watch": "jest --config jest.test.config.js --watch",
     "lint": "jest --config jest.eslint.config.js",
-    "format": "prettier --write '**/*.js'",
+    "format": "prettier --write '**/*.{js,ts,tsx}'",
+    "typecheck": "tsc --noEmit",
     "versions:appkit": "manypkg upgrade @commercetools-frontend",
     "versions:uikit": "manypkg upgrade @commercetools-uikit"
   },
@@ -23,6 +24,7 @@
     "@babel/runtime-corejs3": "^7.22.15",
     "@commercetools-frontend/actions-global": "workspace:*",
     "@commercetools-frontend/application-components": "workspace:*",
+    "@commercetools-frontend/application-config": "workspace:*",
     "@commercetools-frontend/application-shell": "workspace:*",
     "@commercetools-frontend/application-shell-connectors": "workspace:*",
     "@commercetools-frontend/assets": "workspace:*",
@@ -83,13 +85,13 @@
     "msw": "0.49.3",
     "omit-empty-es": "1.2.0",
     "prettier": "2.8.8",
-    "prop-types": "15.8.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
     "react-intl": "^6.4.7",
     "react-redux": "7.2.9",
     "react-router-dom": "5.3.4",
-    "redux": "4.2.1"
+    "redux": "4.2.1",
+    "typescript": "5.0.4"
   },
   "resolutions": {
     "@emotion/react": "^11.11.1",

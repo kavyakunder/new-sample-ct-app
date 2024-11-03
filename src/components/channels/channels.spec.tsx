@@ -4,8 +4,10 @@ import {
   fireEvent,
   screen,
   mapResourceAccessToAppliedPermissions,
+  type TRenderAppWithReduxOptions,
 } from '@commercetools-frontend/application-shell/test-utils';
 import { buildGraphqlList } from '@commercetools-test-data/core';
+import type { TChannel } from '@commercetools-test-data/channel';
 import * as Channel from '@commercetools-test-data/channel';
 import { LocalizedString } from '@commercetools-test-data/commons';
 import { renderApplicationWithRedux } from '../../test-utils';
@@ -25,7 +27,7 @@ afterAll(() => {
   mockServer.close();
 });
 
-const renderApp = (options = {}) => {
+const renderApp = (options: Partial<TRenderAppWithReduxOptions> = {}) => {
   const route = options.route || `/my-project/${entryPointUriPath}/channels`;
   const { history } = renderApplicationWithRedux(<ApplicationRoutes />, {
     route,
@@ -49,7 +51,7 @@ it('should render channels and paginate to second page', async () => {
 
       return res(
         ctx.data({
-          channels: buildGraphqlList(
+          channels: buildGraphqlList<TChannel>(
             Array.from({ length: itemsPerPage }).map((_, index) =>
               Channel.random()
                 .name(LocalizedString.random())

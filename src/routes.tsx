@@ -1,9 +1,13 @@
+import type { ReactNode } from 'react';
 import { Switch, Route, useRouteMatch } from 'react-router-dom';
 import Spacings from '@commercetools-uikit/spacings';
 import Channels from './components/channels';
 import Welcome from './components/welcome';
 
-const ApplicationRoutes = () => {
+type ApplicationRoutesProps = {
+  children?: ReactNode;
+};
+const ApplicationRoutes = (_props: ApplicationRoutesProps) => {
   const match = useRouteMatch();
 
   /**

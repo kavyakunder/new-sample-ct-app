@@ -1,4 +1,3 @@
-import PropTypes from 'prop-types';
 import { useIntl } from 'react-intl';
 import {
   Link as RouterLink,
@@ -26,9 +25,10 @@ import {
   formatLocalizedString,
   transformLocalizedFieldToLocalizedString,
 } from '@commercetools-frontend/l10n';
-import messages from './messages';
+import type { TFetchChannelsQuery } from '../../types/generated/ctp';
 import { useChannelsFetcher } from '../../hooks/use-channels-connector';
 import { getErrorMessage } from '../../helpers';
+import messages from './messages';
 import ChannelDetails from '../channel-details';
 
 const columns = [
@@ -37,26 +37,11 @@ const columns = [
   { key: 'roles', label: 'Roles' },
 ];
 
-const itemRenderer = (item, column, dataLocale, projectLanguages) => {
-  switch (column.key) {
-    case 'roles':
-      return item.roles.join(', ');
-    case 'name':
-      return formatLocalizedString(
-        { name: transformLocalizedFieldToLocalizedString(item.nameAllLocales) },
-        {
-          key: 'name',
-          locale: dataLocale,
-          fallbackOrder: projectLanguages,
-          fallback: NO_VALUE_FALLBACK,
-        }
-      );
-    default:
-      return item[column.key];
-  }
+type TChannelsProps = {
+  linkToWelcome: string;
 };
 
-const Channels = (props) => {
+const Channels = (props: TChannelsProps) => {
   const intl = useIntl();
   const match = useRouteMatch();
   const { push } = useHistory();
@@ -64,7 +49,7 @@ const Channels = (props) => {
   const tableSorting = useDataTableSortingState({ key: 'key', order: 'asc' });
   const { dataLocale, projectLanguages } = useApplicationContext((context) => ({
     dataLocale: context.dataLocale,
-    projectLanguages: context.project.languages,
+    projectLanguages: context.project?.languages,
   }));
   const { channelsPaginatedResult, error, loading } = useChannelsFetcher({
     page,
@@ -102,13 +87,34 @@ const Channels = (props) => {
 
       {channelsPaginatedResult ? (
         <Spacings.Stack scale="l">
-          <DataTable
+          <DataTable<NonNullable<TFetchChannelsQuery['channels']['results']>[0]>
             isCondensed
             columns={columns}
             rows={channelsPaginatedResult.results}
-            itemRenderer={(item, column) =>
-              itemRenderer(item, column, dataLocale, projectLanguages)
-            }
+            itemRenderer={(item, column) => {
+              switch (column.key) {
+                case 'key':
+                  return item.key;
+                case 'roles':
+                  return item.roles.join(', ');
+                case 'name':
+                  return formatLocalizedString(
+                    {
+                      name: transformLocalizedFieldToLocalizedString(
+                        item.nameAllLocales ?? []
+                      ),
+                    },
+                    {
+                      key: 'name',
+                      locale: dataLocale,
+                      fallbackOrder: projectLanguages,
+                      fallback: NO_VALUE_FALLBACK,
+                    }
+                  );
+                default:
+                  return null;
+              }
+            }}
             sortedBy={tableSorting.value.key}
             sortDirection={tableSorting.value.order}
             onSortChange={tableSorting.onChange}
@@ -122,7 +128,7 @@ const Channels = (props) => {
             totalItems={channelsPaginatedResult.total}
           />
           <Switch>
-            <SuspendedRoute path={`${match.path}/:id`}>
+            <SuspendedRoute path={`${match.url}/:id`}>
               <ChannelDetails onClose={() => push(`${match.url}`)} />
             </SuspendedRoute>
           </Switch>
@@ -132,8 +138,5 @@ const Channels = (props) => {
   );
 };
 Channels.displayName = 'Channels';
-Channels.propTypes = {
-  linkToWelcome: PropTypes.string.isRequired,
-};
 
 export default Channels;
