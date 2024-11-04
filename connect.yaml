@@ -1,5 +1,5 @@
 deployAs:
-  - name: sample-learning-app
+  - name: sample-learning
     applicationType: merchant-center-custom-application
     configuration:
       standardConfiguration:
