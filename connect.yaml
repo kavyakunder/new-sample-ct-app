@@ -1,9 +1,6 @@
 deployAs:
   - name: my-new-custom-application-project
     applicationType: merchant-center-custom-application
-    scripts:
-      postDeploy: npm install && npm run connector:post-deploy
-      preUndeploy: npm install && npm run connector:pre-undeploy
     configuration:
       standardConfiguration:
         - key: CUSTOM_APPLICATION_ID
