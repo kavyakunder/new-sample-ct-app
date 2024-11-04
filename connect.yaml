@@ -1,5 +1,5 @@
 deployAs:
-  - name: sample-learning
+  - name: quota-manager
     applicationType: merchant-center-custom-application
     configuration:
       standardConfiguration:
