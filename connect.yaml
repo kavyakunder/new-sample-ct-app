@@ -1,5 +1,5 @@
 deployAs:
-  - name: quota-manager
+  - name: quota-managers
     applicationType: merchant-center-custom-application
     configuration:
       standardConfiguration:
