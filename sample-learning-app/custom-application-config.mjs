@@ -28,6 +28,7 @@ const config = {
   },
   submenuLinks: [
     {
+      uriPath: 'channels',
       defaultLabel: 'Sample Learning App',
       labelAllLocales: [],
       permissions: [PERMISSIONS.View],
