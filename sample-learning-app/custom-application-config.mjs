@@ -13,7 +13,6 @@ const config = {
     },
     production: {
       applicationId: '${env:CUSTOM_APPLICATION_ID}',
-      url: '${env:APPLICATION_URL}',
     },
   },
   oAuthScopes: {
